@@ -16,22 +16,8 @@ use \Exception;
 
 class FrontController
 {
-    protected $request;
-    protected $response;
-    protected $viewFilesDirectory;
-
-    public function __construct(Request $request, Response $response, $viewFilesDirectory)
+    public function run(Request $request, Response $response, $viewFilesDirectory)
     {
-        $this->request = $request;
-        $this->response = $response;
-        $this->viewFilesDirectory = $viewFilesDirectory;
-    }
-
-    public function run()
-    {
-        $request  = $this->request;
-        $response = $this->response;
-
         // Routing: find out which controller and action is to be run
         $router = new Router();
         list($controller, $action) = $router->route($request);
@@ -48,7 +34,7 @@ class FrontController
         if(!($result instanceof Response)) {
             // The result isn't a Response object, then we need to render a view script
             $filename = "$controller/$action.phtml";
-            $view = new View($this->viewFilesDirectory);
+            $view = new View($viewFilesDirectory);
             $content = $view->render($filename, $result);
             $response->content = $content;
         }

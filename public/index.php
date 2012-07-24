@@ -19,6 +19,6 @@ $response = new Simplicity\Response();
 $viewFilesDirectory = ROOT_DIR . '/Application/View';
 
 // instantiate the front controller, run it and send the response to the browser
-$frontController = new Simplicity\FrontController($request, $response, $viewFilesDirectory);
-$response = $frontController->run();
+$frontController = new Simplicity\FrontController();
+$response = $frontController->run($request, $response, $viewFilesDirectory);
 $response->send();
