@@ -8,6 +8,20 @@
  */
 namespace Simplicity;
 
+/**
+ * The Response object represents all the information we need to send back 
+ * to the browser. It holds three thing: status code, headers and content
+ * 
+ * The status code is the first header sent back and is a number along with
+ * a reason phrase. As the phrase is quite hard to remember, there's a
+ * helper method, getReasonPhrase(), which will provide them.
+ * 
+ * Each header has a name and a value, which are most easily set using the 
+ * helper method setHeader().
+ * 
+ * Finally, the content is just a string, so can be set using the public
+ * property, $content.
+ */
 class Response
 {
     public $statusCode = 200;

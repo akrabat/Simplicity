@@ -1,4 +1,9 @@
 <?php
+/**
+ * This is the entry point to the website. It set up autoloading and then
+ * configures and runs the FrontController object. Finally it sends the
+ * Response to browser which will send the relevant headers and content.
+ */
 
 // define ROOT_DIR as the parent of this directory
 define("ROOT_DIR", realpath(__DIR__. '/..'));

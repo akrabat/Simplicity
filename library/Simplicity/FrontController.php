@@ -12,8 +12,19 @@ use Simplicity\Request;
 use Simplicity\Response;
 use Simplicity\Router;
 use Simplicity\View;
-use \Exception;
 
+/**
+ * The front controller accepts all requests to the web application and 
+ * executes the correct controller action method. The controller action method
+ * returns either a Response object or an array of key/value pairs which are
+ * parameters for the view script. If an array is returned, then the front 
+ * controller will instantiate a View object to render the correct view
+ * script and assign the result to the Response's content property.
+ * 
+ * The view script that is called is ControllerName/actionName.phtml within the
+ * $viewFilesDirectory.
+ * 
+ */
 class FrontController
 {
     public function run(Request $request, Response $response, $viewFilesDirectory)
