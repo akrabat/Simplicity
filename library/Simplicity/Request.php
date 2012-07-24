@@ -10,11 +10,7 @@ namespace Simplicity;
 
 class Request
 {
-    protected $getParameters;
-    protected $postParameters;
-    protected $serverParameters;
-    protected $routingParameters;
-
+    public $routingParameters;
 
     public function getGetParameter($name, $default='')
     {
@@ -50,54 +46,5 @@ class Request
             $value = $this->routingParameters[$name];
         }
         return $value;
-    }
-
-
-    // ========================================================================
-    // Getters and Setters for properties
-    // ========================================================================
-
-    public function getGetParameters()
-    {
-        return $this->getParameters;
-    }
-    
-    public function setGetParameters($getParameters)
-    {
-        $this->getParameters = $getParameters;
-        return $this;
-    }
-
-    public function getPostParameters()
-    {
-        return $this->postParameters;
-    }
-    
-    public function setPostParameters($postParameters)
-    {
-        $this->postParameters = $postParameters;
-        return $this;
-    }
-
-    public function getServerParameters()
-    {
-        return $this->serverParameters;
-    }
-    
-    public function setServerParameters($serverParameters)
-    {
-        $this->serverParameters = $serverParameters;
-        return $this;
-    }
-
-    public function getRoutingParameters()
-    {
-        return $this->routingParameters;
-    }
-    
-    public function setRoutingParameters($routingParameters)
-    {
-        $this->routingParameters = $routingParameters;
-        return $this;
     }
 }

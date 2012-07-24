@@ -10,6 +10,9 @@ namespace Simplicity;
 
 class Router
 {
+    /**
+     * Find out the name of the controller and action that is requested
+     */
     public function route($request)
     {
         $controller = 'index';
@@ -23,16 +26,8 @@ class Router
         $controller = $request->getPostParameter('controller', $controller);
         $action = $request->getPostParameter('action', $action);
 
-        // finally check the path_info 
+        // finally check the path_info here
 
-
-        $params = array(
-            'controller' => $controller,
-            'action' => $action,
-        );
-        return $params;
-
+        return array(ucfirst($controller), lcfirst($action));
     }
-
-
 }

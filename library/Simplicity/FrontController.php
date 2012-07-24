@@ -20,98 +20,39 @@ class FrontController
     protected $response;
     protected $viewFilesDirectory;
 
-    public function __construct(Request $request = null, Response $response = null)
+    public function __construct(Request $request, Response $response, $viewFilesDirectory)
     {
-        $this->setRequest($request);
-        $this->setResponse($response);
-
-        $this->setViewFilesDirectory(__DIR__ . '/../../Application/View');
+        $this->request = $request;
+        $this->response = $response;
+        $this->viewFilesDirectory = $viewFilesDirectory;
     }
 
     public function run()
     {
-        $request  = $this->getRequest();
-        $response = $this->getResponse();
+        $request  = $this->request;
+        $response = $this->response;
 
-        $routingParameters = $this->route($request);
-        $request->setRoutingParameters($routingParameters);
+        // Routing: find out which controller and action is to be run
+        $router = new Router();
+        list($controller, $action) = $router->route($request);
 
-        $result = $this->dispatch($request, $response);
+        // store to request in case the view or controller need them
+        $request->routingParameters['controller'] = $controller;
+        $request->routingParameters['action'] = $action;
+
+        // Dispatching: run the requested action method within the controller class
+        $controllerName = 'Application\\Controller\\' . $controller . 'Controller';
+        $actionName = $action . 'Action';
+        $controllerClass = new $controllerName($request, $response);
+        $result = $controllerClass->$actionName();
         if(!($result instanceof Response)) {
-            $view = new View($this->getViewFilesDirectory(), $request, $response);
-            $response->setContent($view->render($result));
+            // The result isn't a Response object, then we need to render a view script
+            $filename = "$controller/$action.phtml";
+            $view = new View($this->viewFilesDirectory);
+            $content = $view->render($filename, $result);
+            $response->content = $content;
         }
 
         return $response;
-    }
-
-    protected function route($request)
-    {
-        $router = new Router();
-        return $router->route($request);
-    }
-
-    protected function dispatch(Request $request, Response $response)
-    {
-        $controller = $request->getRouteParameter('controller', 'index1');
-        $action = $request->getRouteParameter('action', 'index1');
-
-        $controllerName = 'Application\\Controller\\'.ucfirst($controller) . 'Controller';
-        if (!class_exists($controllerName)) {
-            die('oops');
-        }
-        $controller = new $controllerName($request, $response);
-
-        $actionName = lcfirst($action) . 'Action';
-        if (!is_callable(array($controller, $actionName))) {
-            throw new Exception("Cannot find action method $actionName in $controllerName");
-        }
-
-        $result = $controller->$actionName();
-
-        return $result;
-    }
-
-    // ========================================================================
-    // Getters and Setters for properties
-    // ========================================================================
-
-    public function getViewFilesDirectory()
-    {
-        return $this->viewFilesDirectory;
-    }
-    
-    public function setViewFilesDirectory($viewFilesDirectory)
-    {
-        $this->viewFilesDirectory = $viewFilesDirectory;
-        return $this;
-    }
-
-    public function getRequest()
-    {
-        if (!$this->request) {
-            $this->request = new Request;
-        }
-        return $this->request;
-    }
-    
-    public function setRequest($request)
-    {
-        $this->request = $request;
-        return $this;
-    }
-
-    public function getResponse()
-    {
-        if (!$this->response) {
-            $this->response = new Response;
-        }
-        return $this->response;
-    }
-    
-    public function setResponse($response)
-    {
-        $this->response = $response;
-        return $this;
     }
 }

@@ -18,11 +18,19 @@ class IndexController
 
     public function indexAction()
     {
+
         return array('message' => "Hello World");
     }
 
     public function testAction()
     {
         return array('message' => "This is a test");
+    }
+
+    public function redirectAction()
+    {
+        $this->response->statusCode = '302';
+        $this->response->setHeader('Location', 'http://www.example.com');
+        return $this->response;
     }    
 }

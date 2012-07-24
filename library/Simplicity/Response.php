@@ -10,50 +10,38 @@ namespace Simplicity;
 
 class Response
 {
-    protected $version = '1.1';
-    protected $statusCode = 200;
-    protected $headers = array();
-    protected $content;
+    public $statusCode = 200;
+    public $headers = array();
+    public $content;
 
-
+    /**
+     * Set a header's name and its value
+     */
     public function setHeader($name, $value)
     {
         $this->headers[$name] = $value;
         return $this;
     }
-    
-    public function getHeader($name)
-    {
-        $value = '';
-        if (array_key_exists($name, $this->headers)) {
-            $value = $this->headers[$name];
-        }
-        return $value;
-    }
 
+    /**
+     * Send the response to the browser
+     */
     public function send()
     {
-        $this->sendHeaders()
-             ->sendContent();
-        return $this;
-    }
-
-    public function sendHeaders()
-    {
-        return $this;   
-    }
-
-    public function sendContent()
-    {
-        echo $this->getContent();
+        header('HTTP/1.1 ' . $this->statusCode . ' ' . $this->getReasonPhrase());
+        foreach ($this->headers as $name => $value) {
+            header("$name: $value");
+        }
+        echo $this->content;
     }
 
     public function getReasonPhrase($statusCode = null)
     {
         if (null === $statusCode) {
-            $statusCode = $this->getStatusCode();
+            $statusCode = $this->statusCode;
         }
 
+        // List from Zend Framework 2
         $reasonPhrases = array(
             // INFORMATIONAL CODES
             100 => 'Continue',
@@ -124,55 +112,5 @@ class Response
         }
 
         return '';
-    }
-
-
-
-    // ========================================================================
-    // Getters and Setters for properties
-    // ========================================================================
-
-    public function getVersion()
-    {
-        return $this->version;
-    }
-    
-    public function setVersion($version)
-    {
-        $this->version = $version;
-        return $this;
-    }
-    
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
-    
-    public function setStatusCode($statusCode)
-    {
-        $this->statusCode = $statusCode;
-        return $this;
-    }
-    
-    public function getHeaders()
-    {
-        return $this->headers;
-    }
-    
-    public function setHeaders($headers)
-    {
-        $this->headers = $headers;
-        return $this;
-    }
-    
-    public function getContent()
-    {
-        return $this->content;
-    }
-    
-    public function setContent($content)
-    {
-        $this->content = $content;
-        return $this;
     }
 }
