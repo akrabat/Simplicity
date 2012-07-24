@@ -19,7 +19,7 @@ class IndexController
     public function indexAction()
     {
 
-        return array('message' => "Hello World");
+        return array('message' => "Hello World: 1 > 2");
     }
 
     public function testAction()
